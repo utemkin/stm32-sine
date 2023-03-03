@@ -52,6 +52,7 @@ static Terminal* terminal;
 static void Ms100Task(void)
 {
    DigIo::led_out.Toggle();
+   DigIo::led2_out.Toggle();
    iwdg_reset();
    float cpuLoad = PwmGeneration::GetCpuLoad() + scheduler->GetCpuLoad();
    Param::SetFloat(Param::cpuload, cpuLoad / 10);
@@ -134,7 +135,7 @@ static void Ms10Task(void)
       RunCharger(udc);
    }
 
-   stt |= DigIo::emcystop_in.Get() ? STAT_NONE : STAT_EMCYSTOP;
+//   stt |= DigIo::emcystop_in.Get() ? STAT_NONE : STAT_EMCYSTOP;
    stt |= DigIo::mprot_in.Get() ? STAT_NONE : STAT_MPROT;
    stt |= Param::GetInt(Param::potnom) <= 0 ? STAT_NONE : STAT_POTPRESSED;
    stt |= udc >= Param::GetFloat(Param::udcsw) ? STAT_NONE : STAT_UDCBELOWUDCSW;
@@ -362,6 +363,7 @@ extern "C" int main(void)
    clock_setup();
    rtc_setup();
    hwRev = io_setup();
+   gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP);
    tim_setup();
    nvic_setup();
    parm_load();
@@ -393,6 +395,7 @@ extern "C" int main(void)
    Param::Change(Param::PARAM_LAST);
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
+   DigIo::OE_245.Set();
 
    while(1)
       t.Run();

@@ -122,7 +122,7 @@ HWREV detect_hw()
    //else if (gpio_get(GPIOB, GPIO1)) //On Tesla M3 board precharge output is tied to Vcc
      // return HW_TESLAM3;
    else if (is_floating(GPIOC, GPIO9)) //Desat pin is floating
-      return HW_REV1;
+      return HW_REV3;//hacky way to get to rev3
    else if (is_floating(GPIOB, GPIO5)) //Cruise pin is floating
       return HW_PRIUS;
    else if (is_floating(GPIOA, GPIO0)) //uvlo/button pin is floating
@@ -171,10 +171,13 @@ uint16_t pwmio_setup(bool activeLow)
 {
    uint8_t outputMode = activeLow ? GPIO_MODE_INPUT : GPIO_MODE_OUTPUT_50_MHZ;
    uint8_t outputConf = activeLow ? GPIO_CNF_INPUT_FLOAT : GPIO_CNF_OUTPUT_ALTFN_PUSHPULL;
-   uint16_t actualPattern = gpio_get(GPIOA, GPIO8 | GPIO9 | GPIO10) | gpio_get(GPIOB, GPIO13 | GPIO14 | GPIO15);
+   //uint16_t actualPattern = gpio_get(GPIOA, GPIO8 | GPIO9 | GPIO10) | gpio_get(GPIOB, GPIO13 | GPIO14 | GPIO15);
+   uint16_t actualPattern = gpio_get(GPIOA, GPIO8 | GPIO9 | GPIO10) | gpio_get(GPIOA, GPIO7) | gpio_get(GPIOB, GPIO0 | GPIO1);
 
    gpio_set_mode(GPIOA, outputMode, outputConf, GPIO8 | GPIO9 | GPIO10);
-   gpio_set_mode(GPIOB, outputMode, outputConf, GPIO13 | GPIO14 | GPIO15);
+  // gpio_set_mode(GPIOB, outputMode, outputConf, GPIO13 | GPIO14 | GPIO15);
+   gpio_set_mode(GPIOA, outputMode, outputConf, GPIO7);
+   gpio_set_mode(GPIOB, outputMode, outputConf, GPIO0 | GPIO1);
 
    return actualPattern;
 }
@@ -327,7 +330,7 @@ void tim_setup()
    }
    else
    {
-      gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO7 | GPIO8 | GPIO9);
+     // gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO7 | GPIO8 | GPIO9);
    }
 }
 

@@ -5,24 +5,34 @@
 
 #define DIG_IO_LIST \
     DIG_IO_ENTRY(cruise_in,   GPIOB, GPIO5,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(start_in,    GPIOB, GPIO6,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(brake_in,    GPIOA, GPIO2,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(mprot_in,    GPIOA, GPIO3,  PinMode::INPUT_PU)    \
-    DIG_IO_ENTRY(fwd_in,      GPIOA, GPIO4,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(rev_in,      GPIOC, GPIO6,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(emcystop_in, GPIOC, GPIO7,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(bk_in,       GPIOB, GPIO12, PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(bms_in,      GPIOC, GPIO8,  PinMode::INPUT_PD)    \
-    DIG_IO_ENTRY(ocur_in,     GPIOA, GPIO1,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(desat_in,    GPIOC, GPIO9,  PinMode::INPUT_FLT)   \
-    DIG_IO_ENTRY(dcsw_out,    GPIOC, GPIO13, PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(vtg_out,     GPIOC, GPIO11, PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(prec_out,    GPIOB, GPIO1,  PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(led_out,     GPIOC, GPIO12, PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(err_out,     GPIOC, GPIO10, PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(temp0_out,   GPIOC, GPIO10, PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(speed_out,   GPIOB, GPIO9,  PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(brk_out,     GPIOC, GPIO5,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(start_in,    GPIOC, GPIO15, PinMode::INPUT_PD)   \
+    DIG_IO_ENTRY(brake_in,    GPIOC, GPIO5,  PinMode::INPUT_PD)   \
+    DIG_IO_ENTRY(mprot_in,    GPIOB, GPIO2,  PinMode::INPUT_PU)    \
+    DIG_IO_ENTRY(fwd_in,      GPIOB, GPIO9,  PinMode::INPUT_PU)   \
+    DIG_IO_ENTRY(rev_in,      GPIOB, GPIO8,  PinMode::INPUT_PD)   \
+    DIG_IO_ENTRY(emcystop_in, GPIOC, GPIO15,  PinMode::INPUT_PD)   \
+    DIG_IO_ENTRY(bk_in,       GPIOA, GPIO6, PinMode::INPUT_FLT)   \
+    DIG_IO_ENTRY(bms_in,      GPIOB, GPIO8,  PinMode::INPUT_PD)    \
+    DIG_IO_ENTRY(ocur_in,     GPIOA, GPIO6,  PinMode::INPUT_FLT)   \
+    DIG_IO_ENTRY(desat_in,    GPIOA, GPIO6,  PinMode::INPUT_FLT)   \
+    DIG_IO_ENTRY(dcsw_out,    GPIOD, GPIO3, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(vtg_out,     GPIOD, GPIO4, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(prec_out,    GPIOD, GPIO5,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(led_out,     GPIOC, GPIO13, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(led2_out,    GPIOC, GPIO14, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(err_out,     GPIOD, GPIO6, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(temp0_out,   GPIOD, GPIO7, PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(speed_out,   GPIOD, GPIO8,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(brk_out,     GPIOD, GPIO9,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Gate_CS,     GPIOA, GPIO4,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(OE_245,      GPIOB, GPIO14,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Gate_SD,     GPIOB, GPIO15,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Mux_S2,      GPIOC, GPIO7,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Mux_S1,      GPIOC, GPIO8,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Mux_S0,      GPIOC, GPIO9,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(PSU_CS,      GPIOA, GPIO15,  PinMode::OUTPUT)      \
+
+
 
 #define DIG_IO_BLUEPILL \
     DIG_IO_ENTRY(brake_in,    GPIOB, GPIO9,  PinMode::INPUT_FLT)   \

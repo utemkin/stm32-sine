@@ -420,7 +420,9 @@ uint16_t PwmGeneration::TimerSetup(uint16_t deadtime, bool activeLow)
    timer_enable_counter(PWM_TIMER);
 
    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, outputMode, GPIO8 | GPIO9 | GPIO10);
-   gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, outputMode, GPIO13 | GPIO14 | GPIO15);
+   //gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, outputMode, GPIO13 | GPIO14 | GPIO15);
+   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ, outputMode, GPIO7);
+   gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, outputMode, GPIO0 | GPIO1);
    //Callback frequency is constant because we use the repetition counter
    return rcc_apb2_frequency / FRQ_DIVIDER;
 }
