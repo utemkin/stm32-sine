@@ -37,9 +37,9 @@
 #define REV_CNT_DMAEN      hwRev == HW_REV1 ? TIM_DIER_CC3DE : TIM_DIER_CC1DE
 #define REV_CNT_DMACHAN    hwRev == HW_REV1 ? DMA_CHANNEL2 : DMA_CHANNEL6
 
-#define NORTH_EXC_PORT     hwRev == HW_BLUEPILL ? GPIOC : GPIOD
-#define NORTH_EXC_PIN      hwRev == HW_BLUEPILL ? GPIO14 : GPIO2
-#define NORTH_EXC_EXTI     hwRev == HW_BLUEPILL ? EXTI14 : EXTI2
+#define NORTH_EXC_PORT     hwRev == HW_BLUEPILL ? GPIOC : GPIOC
+#define NORTH_EXC_PIN      hwRev == HW_BLUEPILL ? GPIO14 : GPIO6
+#define NORTH_EXC_EXTI     hwRev == HW_BLUEPILL ? EXTI14 : EXTI6
 
 typedef enum
 {

@@ -283,7 +283,7 @@ void Param::Change(Param::PARAM_NUM paramNum)
          terminal->SetNodeId(Param::GetInt(Param::nodeid));
          break;
       default:
-         PwmGeneration::SetCurrentLimitThreshold(Param::Get(Param::ocurlim));
+       //  PwmGeneration::SetCurrentLimitThreshold(Param::Get(Param::ocurlim));
          PwmGeneration::SetPolePairRatio(Param::GetInt(Param::polepairs) / Param::GetInt(Param::respolepairs));
 
          #if CONTROL == CTRL_FOC
@@ -364,7 +364,7 @@ extern "C" int main(void)
    rtc_setup();
    hwRev = io_setup();
    gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP);
-   tim_setup();
+ //  tim_setup();// remove oc timers
    nvic_setup();
    parm_load();
    ErrorMessage::SetTime(1);

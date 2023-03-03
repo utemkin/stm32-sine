@@ -88,7 +88,7 @@ void PwmGeneration::SetCurrentOffset(int offset1, int offset2)
       ErrorMessage::Post(ERR_HICUROFS2);
    }
 
-   SetCurrentLimitThreshold(Param::Get(Param::ocurlim));
+//   SetCurrentLimitThreshold(Param::Get(Param::ocurlim));
 }
 
 int PwmGeneration::GetCpuLoad()

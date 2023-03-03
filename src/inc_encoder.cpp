@@ -76,7 +76,7 @@ static bool seenNorthSignal = false;
 static int32_t turnsSinceLastSample = 0;
 static int32_t distance = 0;
 static int32_t resolverMin = 0, resolverMax = 0, startupDelay;
-static int32_t sinChan = 3, cosChan = 2;
+static int32_t sinChan = 12, cosChan = 3;
 static int32_t detectedDirection = 0;
 static uint16_t sincosoffs = 2048;
 
@@ -158,8 +158,8 @@ void Encoder::SwapSinCos(bool swap)
 {
    if (swap)
    {
-      sinChan = 2;
-      cosChan = 3;
+      sinChan = 3;
+      cosChan = 12;
    }
    else
    {
@@ -451,10 +451,11 @@ void Encoder::InitResolverMode()
 
    adc_set_injected_sequence(ADC1, sizeof(channels), channels);
    adc_enable_external_trigger_injected(ADC1, ADC_CR2_JEXTSEL_JSWSTART);
-   adc_set_sample_time(ADC1, 6, ADC_SMPR_SMP_1DOT5CYC);
-   adc_set_sample_time(ADC1, 7, ADC_SMPR_SMP_1DOT5CYC);
+   adc_set_sample_time(ADC1, 12, ADC_SMPR_SMP_1DOT5CYC);
+   adc_set_sample_time(ADC1, 3, ADC_SMPR_SMP_1DOT5CYC);
 
-   gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO6 | GPIO7);
+   gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO3);
+   gpio_set_mode(GPIOC, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO2);
    exti_disable_request(NORTH_EXC_EXTI);
 
    if (encMode == RESOLVER)
@@ -469,16 +470,16 @@ void Encoder::InitResolverMode()
       timer_direction_up(REV_CNT_TIMER);
       timer_generate_event(REV_CNT_TIMER, TIM_EGR_UG);
       gpio_set_mode(NORTH_EXC_PORT, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, NORTH_EXC_PIN);
-      adc_set_injected_offset(ADC1, 2, 0);
+      adc_set_injected_offset(ADC1, 12, 0);
       adc_set_injected_offset(ADC1, 3, 0);
 
       adc_start_conversion_injected(ADC1); //Determine offset
 
       while (!adc_eoc_injected(ADC1));
 
-      int ch1 = adc_read_injected(ADC1, 2);
+      int ch1 = adc_read_injected(ADC1, 12);
       int ch2 = adc_read_injected(ADC1, 3);
-      adc_set_injected_offset(ADC1, 2, ch1);
+      adc_set_injected_offset(ADC1, 12, ch1);
       adc_set_injected_offset(ADC1, 3, ch2);
       adc_enable_external_trigger_injected(ADC1, ADC_CR2_JEXTSEL_TIM3_CC4);
 
@@ -492,7 +493,7 @@ void Encoder::InitResolverMode()
       //Offset assumed 3.3V/2 - 2048
       //on my hardware, min is 0.465V, max is 2.510v, so offset is 1.4875v, or 1846
       //this should be a parameter?
-      adc_set_injected_offset(ADC1, 2, sincosoffs);
+      adc_set_injected_offset(ADC1, 12, sincosoffs);
       adc_set_injected_offset(ADC1, 3, sincosoffs);
    }
 
