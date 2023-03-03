@@ -470,16 +470,16 @@ void Encoder::InitResolverMode()
       timer_direction_up(REV_CNT_TIMER);
       timer_generate_event(REV_CNT_TIMER, TIM_EGR_UG);
       gpio_set_mode(NORTH_EXC_PORT, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, NORTH_EXC_PIN);
-      adc_set_injected_offset(ADC1, 12, 0);
+      adc_set_injected_offset(ADC1, 2, 0);
       adc_set_injected_offset(ADC1, 3, 0);
 
       adc_start_conversion_injected(ADC1); //Determine offset
 
       while (!adc_eoc_injected(ADC1));
 
-      int ch1 = adc_read_injected(ADC1, 12);
+      int ch1 = adc_read_injected(ADC1, 2);
       int ch2 = adc_read_injected(ADC1, 3);
-      adc_set_injected_offset(ADC1, 12, ch1);
+      adc_set_injected_offset(ADC1, 2, ch1);
       adc_set_injected_offset(ADC1, 3, ch2);
       adc_enable_external_trigger_injected(ADC1, ADC_CR2_JEXTSEL_TIM3_CC4);
 
@@ -493,7 +493,7 @@ void Encoder::InitResolverMode()
       //Offset assumed 3.3V/2 - 2048
       //on my hardware, min is 0.465V, max is 2.510v, so offset is 1.4875v, or 1846
       //this should be a parameter?
-      adc_set_injected_offset(ADC1, 12, sincosoffs);
+      adc_set_injected_offset(ADC1, 2, sincosoffs);
       adc_set_injected_offset(ADC1, 3, sincosoffs);
    }
 
