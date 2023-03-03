@@ -447,7 +447,7 @@ void Encoder::InitTimerABZMode()
 void Encoder::InitResolverMode()
 {
    //The first injected channel is always noisy, so we insert one dummy channel
-   uint8_t channels[3] = { 6, 6, 7 };
+   uint8_t channels[3] = { 3, 3, 12 };
 
    adc_set_injected_sequence(ADC1, sizeof(channels), channels);
    adc_enable_external_trigger_injected(ADC1, ADC_CR2_JEXTSEL_JSWSTART);
