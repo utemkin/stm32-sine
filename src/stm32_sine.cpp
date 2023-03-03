@@ -365,6 +365,7 @@ extern "C" int main(void)
    hwRev = io_setup();
    gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP);
  //  tim_setup();// remove oc timers
+   spi_setup();//spi1 setup
    nvic_setup();
    parm_load();
    ErrorMessage::SetTime(1);

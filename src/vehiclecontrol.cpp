@@ -34,7 +34,7 @@
 
 #define PRECHARGE_TIMEOUT 500 //5s
 #define CAN_TIMEOUT       50  //500ms
-#define ADC_CHAN_UDC      3
+#define ADC_CHAN_UDC      5
 #define MAP(x, in_min, in_max, out_min,out_max) ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
@@ -337,7 +337,7 @@ float VehicleControl::ProcessUdc()
    //Calculate "12V" supply voltage from voltage divider on mprot pin
    //1.2/(4.7+1.2)/3.33*4095 = 250 -> make it a bit less for pin losses etc
    //HW_REV1 had 3.9k resistors
-   int uauxGain = hwRev == HW_REV1 ? 289 : 249;
+   int uauxGain = hwRev == HW_REV1 ? 289 : 205;
    Param::SetFloat(Param::uaux, (float)AnaIn::uaux.Get() / uauxGain);
 
    //Yes heatsink temperature also selects external ADC as udc source
