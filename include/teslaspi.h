@@ -62,12 +62,26 @@ private:
        SpiCommand_write = 1                        /* Write operation SPI command                  */
    } spiCommandType;
 
+   typedef enum
+   {
+       DeviceStateTransition_none     = 0,         /* NONE     */
+       DeviceStateTransition_init     = 1,         /* INIT     */
+       DeviceStateTransition_normal   = 2,         /* NORMAL   */
+       DeviceStateTransition_sleep    = 3,         /* SLEEP    */
+       DeviceStateTransition_standby  = 4,         /* STANDBY  */
+       DeviceStateTransition_wake     = 5,         /* WAKE     */
+       DeviceStateTransition_reserved = 6,         /* RESERVED */
+   } statereqType;
+
    static void unlockRegisterTLF35584();
    static void lockRegisterTLF35584();
    static void disableWindowWatchdogTLF35584();
    static void disableErrPinMonitorTLF35584();
    static void enableVoltageSupplyRails();
-   static uint16_t transferDataTLF35584(spiCommandType cmd, tlf35584RegAddr addr, uint8_t data);
+   static uint8_t getSystemStatusFlagsTFL35584();
+   static void clearSystemStatusFlagsTFL35584();
+   static void setStateTransitionTLF35584(statereqType requestedStateTransition);
+   static uint8_t transferDataTLF35584(spiCommandType cmd, tlf35584RegAddr addr, uint8_t data);
 };
 
 #endif // TESLASPI_H

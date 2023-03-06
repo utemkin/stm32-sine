@@ -22,6 +22,7 @@
 
 #define PMIC_SPI SPI1
 #define GATE_SPI SPI2
+#define CLEAR_STATUS_FLAGS          0x3F        /* Mask used to clear system status flags given in SYSSF register    */
 
 
 void TeslaSpi::InitPmic()
@@ -30,22 +31,31 @@ void TeslaSpi::InitPmic()
    disableWindowWatchdogTLF35584();
    disableErrPinMonitorTLF35584();
    lockRegisterTLF35584();
+   enableVoltageSupplyRails();
+
+   /* If any error flag has been raised, clear that flag */
+   if (getSystemStatusFlagsTFL35584() != 0)
+   {
+      clearSystemStatusFlagsTFL35584();
+   }
+   //In the example there is a wait time, needed?
+   setStateTransitionTLF35584(DeviceStateTransition_normal);
 }
 
 void TeslaSpi::unlockRegisterTLF35584()
 {
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey1);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey2);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey3);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey4);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey1);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey2);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey3);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, UnlockKey4);
 }
 
 void TeslaSpi::lockRegisterTLF35584()
 {
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey1);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey2);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey3);
-    transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey4);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey1);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey2);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey3);
+   transferDataTLF35584(SpiCommand_write, ProtcfgRegAddr, LockKey4);
 }
 
 void TeslaSpi::disableWindowWatchdogTLF35584()
@@ -66,26 +76,47 @@ void TeslaSpi::disableErrPinMonitorTLF35584()
 
 void TeslaSpi::enableVoltageSupplyRails()
 {
+   uint8_t u = transferDataTLF35584(SpiCommand_read, DevctrlRegAddr, 0);
+
+   u |= 1 << 3; //VoltageReferenceQVR_enabled
+   u |= 1 << 5; //VoltageReferenceQVR_enabled
+
+   /* Update device register values */
+   transferDataTLF35584(SpiCommand_write, DevctrlRegAddr, u);
+   transferDataTLF35584(SpiCommand_write, DevctrlnRegAddr, ~u);
+}
+
+uint8_t TeslaSpi::getSystemStatusFlagsTFL35584()
+{
+   return transferDataTLF35584(SpiCommand_read, SyssfRegAddr, 0);
+}
+
+void TeslaSpi::clearSystemStatusFlagsTFL35584()
+{
+   transferDataTLF35584(SpiCommand_write, SyssfRegAddr, CLEAR_STATUS_FLAGS);
+}
+
+void TeslaSpi::setStateTransitionTLF35584(statereqType requestedStateTransition)
+{
     uint8_t u = transferDataTLF35584(SpiCommand_read, DevctrlRegAddr, 0);
 
-    u |= 1 << 3; //VoltageReferenceQVR_enabled
-    u |= 1 << 5; //VoltageReferenceQVR_enabled
+    u |= requestedStateTransition;
 
     /* Update device register values */
     transferDataTLF35584(SpiCommand_write, DevctrlRegAddr, u);
     transferDataTLF35584(SpiCommand_write, DevctrlnRegAddr, ~u);
 }
 
-uint16_t TeslaSpi::transferDataTLF35584(spiCommandType cmd, tlf35584RegAddr addr, uint8_t data)
+uint8_t TeslaSpi::transferDataTLF35584(spiCommandType cmd, tlf35584RegAddr addr, uint8_t data)
 {
-   uint16_t result = 0;
+   uint8_t result = 0;
 
    DigIo::PSU_CS.Clear();
 
    if (cmd == SpiCommand_write)
       spi_send(PMIC_SPI, (1 << 14) | (addr << 8) | data);
    else
-      result = spi_xfer(PMIC_SPI, (addr << 8) | data);
+      result = spi_xfer(PMIC_SPI, (addr << 8) | data); //discards the upper byte
 
    DigIo::PSU_CS.Set();
 
