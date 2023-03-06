@@ -34,7 +34,9 @@
 #define SHIFT_90DEG  (uint16_t)16384
 #define FRQ_TO_ANGLE(frq) FP_TOINT((frq << SineCore::BITS) / pwmfrq)
 #define DIGIT_TO_DEGREE(a) FP_FROMINT(angle) / (65536 / 360)
-#define FRQ_DIVIDER 8192 //PWM ISR callback frequency divider
+//#define FRQ_DIVIDER 8192 //PWM ISR callback frequency divider
+#define FRQ_DIVIDER 4096 //PWM ISR callback frequency divider
+
 
 uint16_t PwmGeneration::pwmfrq = 1;
 uint16_t PwmGeneration::angle;
