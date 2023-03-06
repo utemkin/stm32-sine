@@ -35,8 +35,8 @@
 #define FRQ_TO_ANGLE(frq) FP_TOINT((frq << SineCore::BITS) / pwmfrq)
 #define DIGIT_TO_DEGREE(a) FP_FROMINT(angle) / (65536 / 360)
 //#define FRQ_DIVIDER 8192 //PWM ISR callback frequency divider
-#define FRQ_DIVIDER 4096 //PWM ISR callback frequency divider
-
+#define FRQ_DIVIDER (1 << (MIN_PWM_DIGITS + 2))  //PWM ISR callback frequency divider
+//MIN_PWM_DIGITS+2 because repetition counter (+1) and count up and down mode (+1)
 
 uint16_t PwmGeneration::pwmfrq = 1;
 uint16_t PwmGeneration::angle;

@@ -34,7 +34,7 @@
 
 #define PRECHARGE_TIMEOUT 500 //5s
 #define CAN_TIMEOUT       50  //500ms
-#define ADC_CHAN_UDC      5
+#define ADC_CHAN_UDC      3
 #define MAP(x, in_min, in_max, out_min,out_max) ((x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min)
 
 
