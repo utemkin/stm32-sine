@@ -72,6 +72,7 @@
 		<Unit filename="include/param_prj.h" />
 		<Unit filename="include/pwmgeneration.h" />
 		<Unit filename="include/temp_meas.h" />
+		<Unit filename="include/teslaspi.h" />
 		<Unit filename="include/throttle.h" />
 		<Unit filename="include/vehiclecontrol.h" />
 		<Unit filename="libopeninv/include/anain.h" />
@@ -122,6 +123,7 @@
 		<Unit filename="src/stm32_sine.cpp" />
 		<Unit filename="src/temp_meas.cpp" />
 		<Unit filename="src/terminal_prj.cpp" />
+		<Unit filename="src/teslaspi.cpp" />
 		<Unit filename="src/throttle.cpp" />
 		<Unit filename="src/vehiclecontrol.cpp" />
 		<Unit filename="stm32_sine.ld">
