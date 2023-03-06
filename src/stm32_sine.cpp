@@ -42,6 +42,7 @@
 #include "pwmgeneration.h"
 #include "temp_meas.h"
 #include "vehiclecontrol.h"
+#include "teslaspi.h"
 
 HWREV hwRev; //Hardware variant of board we are running on
 
@@ -397,6 +398,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
+   TeslaSpi::InitPmic();
 
    while(1)
       t.Run();
