@@ -24,6 +24,7 @@ class TeslaSpi
 {
 public:
    static void InitPmic();
+   static void TlfErrChk();
 
 private:
    /* TLF35584 register address space */

@@ -88,6 +88,8 @@ static void Ms100Task(void)
 
    if (Param::GetInt(Param::canperiod) == CAN_PERIOD_100MS)
       can->SendAll();
+
+   TeslaSpi::TlfErrChk();
 }
 
 static void RunCharger(float udc)

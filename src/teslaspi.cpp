@@ -24,6 +24,8 @@
 #define PMIC_SPI SPI1
 #define GATE_SPI SPI2
 #define CLEAR_STATUS_FLAGS          0x3F        /* Mask used to clear system status flags given in SYSSF register    */
+/** SPI Parity Bit Mask */
+#define TLF35584_SPI_PARITY_MASK    0x0001
 
 #define FLASH_DELAY 9000
 static void delay(void)
@@ -32,6 +34,13 @@ static void delay(void)
    for (i = 0; i < FLASH_DELAY; i++)       /* Wait a bit. */
       __asm__("nop");
 }
+
+void TeslaSpi::TlfErrChk()
+{
+   uint8_t TLFStatus=getSystemStatusFlagsTFL35584();
+   Param::SetInt(Param::TLFStat,TLFStatus);
+}
+
 
 
 void TeslaSpi::InitPmic()
@@ -43,8 +52,6 @@ void TeslaSpi::InitPmic()
    enableVoltageSupplyRails();
 
    /* If any error flag has been raised, clear that flag */
-   uint8_t TLFStatus=getSystemStatusFlagsTFL35584();
-   Param::SetInt(Param::TLFStat,TLFStatus);
    if (getSystemStatusFlagsTFL35584() != 0)
    {
       clearSystemStatusFlagsTFL35584();
