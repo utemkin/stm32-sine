@@ -155,6 +155,7 @@
     VALUE_ENTRY(hwver,       HWREVS,  2036 ) \
     VALUE_ENTRY(opmode,      OPMODES, 2000 ) \
     VALUE_ENTRY(lasterr,     errorListString,  2038 ) \
+    VALUE_ENTRY(TLFStat,     "dig",  2040 ) \
     VALUE_ENTRY(status,      STATUS,  2044 ) \
     VALUE_ENTRY(udc,         "V",     2001 ) \
     VALUE_ENTRY(idc,         "A",     2002 ) \

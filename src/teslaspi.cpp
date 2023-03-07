@@ -18,11 +18,20 @@
  */
 #include "teslaspi.h"
 #include "digio.h"
+#include "params.h"
 #include <libopencm3/stm32/spi.h>
 
 #define PMIC_SPI SPI1
 #define GATE_SPI SPI2
 #define CLEAR_STATUS_FLAGS          0x3F        /* Mask used to clear system status flags given in SYSSF register    */
+
+#define FLASH_DELAY 9000
+static void delay(void)
+{
+   int i;
+   for (i = 0; i < FLASH_DELAY; i++)       /* Wait a bit. */
+      __asm__("nop");
+}
 
 
 void TeslaSpi::InitPmic()
@@ -34,11 +43,14 @@ void TeslaSpi::InitPmic()
    enableVoltageSupplyRails();
 
    /* If any error flag has been raised, clear that flag */
+   uint8_t TLFStatus=getSystemStatusFlagsTFL35584();
+   Param::SetInt(Param::TLFStat,TLFStatus);
    if (getSystemStatusFlagsTFL35584() != 0)
    {
       clearSystemStatusFlagsTFL35584();
    }
    //In the example there is a wait time, needed?
+   delay();
    setStateTransitionTLF35584(DeviceStateTransition_normal);
 }
 
