@@ -44,7 +44,7 @@ OBJSL		= stm32_sine.o hwinit.o stm32scheduler.o params.o terminal.o terminal_prj
            my_string.o digio.o sine_core.o my_fp.o fu.o inc_encoder.o printf.o anain.o \
            temp_meas.o param_save.o throttle.o errormessage.o stm32_can.o pwmgeneration.o \
            picontroller.o terminalcommands.o vehiclecontrol.o teslaspi.o \
-           pmicspidriver.o gatedriver.o gatedriverinterface.o
+           pmicspidriver.o gatedriver.o gatedriverinterface.o crc8.o
 
 ifeq ($(CONTROL), SINE)
 	OBJSL += pwmgeneration-sine.o

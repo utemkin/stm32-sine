@@ -56,6 +56,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     for (int i = 0; i < NumDriverChips; i++)
     {
         readData[i] = spi_xfer(SPI3, writeData[i]);
+        DEVICE_DELAY_US(1);
     }
 
 

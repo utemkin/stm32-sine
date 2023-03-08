@@ -390,6 +390,7 @@ extern "C" int main(void)
 
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
+   DigIo::Gate_PWR.Clear();//gate drive psu enable
 
    PowerWatchdog::Error status = PowerWatchdog::Init();
 
@@ -404,6 +405,17 @@ extern "C" int main(void)
         Param::SetInt(Param::TLFStat,0);
     }
 
+    if (GateDriver::Init())
+    {
+        //printf("Successful\n");
+        Param::SetInt(Param::GTStat,1);
+        GateDriver::Enable();
+    }
+    else
+    {
+        //printf("Failed\n");
+        Param::SetInt(Param::GTStat,0);
+    }
 
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
@@ -429,7 +441,6 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
-   DigIo::Gate_PWR.Clear();
    //TeslaSpi::InitPmic();
 
    while(1)
