@@ -125,7 +125,7 @@ static bool is_existent(uint32_t port, uint16_t pin)
 HWREV detect_hw()
 {
    //Pull low via 30k the precharge output to test whether it is tied to Vcc
-   gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, GPIO1);
+//   gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN, GPIO1);
 
    if (!is_existent(GPIOC, GPIO12)) //Olimex LED pin does not exist
       return HW_BLUEPILL;

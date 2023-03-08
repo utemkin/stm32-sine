@@ -6,8 +6,8 @@
 #define DIG_IO_LIST \
     DIG_IO_ENTRY(cruise_in,   GPIOB, GPIO5,  PinMode::INPUT_FLT)   \
     DIG_IO_ENTRY(start_in,    GPIOC, GPIO15, PinMode::INPUT_PD)   \
-    DIG_IO_ENTRY(brake_in,    GPIOC, GPIO5,  PinMode::INPUT_PD)   \
-    DIG_IO_ENTRY(mprot_in,    GPIOB, GPIO2,  PinMode::INPUT_PU)    \
+    DIG_IO_ENTRY(brake_in,    GPIOB, GPIO2,  PinMode::INPUT_PD)   \
+    DIG_IO_ENTRY(mprot_in,    GPIOD, GPIO15,  PinMode::INPUT_PU)    \
     DIG_IO_ENTRY(fwd_in,      GPIOB, GPIO9,  PinMode::INPUT_PU)   \
     DIG_IO_ENTRY(rev_in,      GPIOB, GPIO8,  PinMode::INPUT_PD)   \
     DIG_IO_ENTRY(emcystop_in, GPIOC, GPIO15,  PinMode::INPUT_PD)   \
@@ -26,7 +26,8 @@
     DIG_IO_ENTRY(brk_out,     GPIOD, GPIO9,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Gate_CS,     GPIOA, GPIO4,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(OE_245,      GPIOB, GPIO14,  PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(Gate_SD,     GPIOB, GPIO15,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Gate_SD,     GPIOC, GPIO5,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Gate_PWR,    GPIOB, GPIO5,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S2,      GPIOC, GPIO7,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S1,      GPIOC, GPIO8,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S0,      GPIOC, GPIO9,  PinMode::OUTPUT)      \

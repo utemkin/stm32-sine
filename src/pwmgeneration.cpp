@@ -163,8 +163,8 @@ extern "C" void tim1_brk_isr(void)
       ErrorMessage::Post(ERR_DESAT);
    else if (!DigIo::emcystop_in.Get() && hwRev != HW_REV3)
       ErrorMessage::Post(ERR_EMCYSTOP);
-   else if (!DigIo::mprot_in.Get() && hwRev != HW_BLUEPILL)
-      ErrorMessage::Post(ERR_MPROT);
+ //  else if (!DigIo::mprot_in.Get() && hwRev != HW_BLUEPILL)
+ //     ErrorMessage::Post(ERR_MPROT);
    else //if (ocur || hwRev == HW_REV1)
       ErrorMessage::Post(ERR_OVERCURRENT);
 
@@ -403,7 +403,7 @@ uint16_t PwmGeneration::TimerSetup(uint16_t deadtime, bool activeLow)
    if (hwRev == HW_BLUEPILL || hwRev == HW_PRIUS)
       timer_set_break_polarity_low(PWM_TIMER);
    else
-      timer_set_break_polarity_high(PWM_TIMER);
+      timer_set_break_polarity_low(PWM_TIMER);
 
    timer_enable_break(PWM_TIMER);
    timer_set_enabled_off_state_in_run_mode(PWM_TIMER);

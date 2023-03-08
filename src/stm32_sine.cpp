@@ -65,7 +65,7 @@ static void Ms100Task(void)
    if (hwRev == HW_REV1 || hwRev == HW_BLUEPILL)
    {
       //If break pin is high and both mprot and emcystop are high than it must be over current
-      if (DigIo::emcystop_in.Get() && DigIo::mprot_in.Get() && DigIo::bk_in.Get())
+      if (DigIo::emcystop_in.Get() && DigIo::bk_in.Get())
       {
          Param::SetInt(Param::din_ocur, 0);
       }
@@ -98,11 +98,11 @@ static void Ms100Task(void)
          ErrorMessage::Post(ERR_PMICSTROBEFAULT);
       }
 
-    if (TeslaM3GateDriver::IsFaulty())
-      {
-         DigIo::Gate_SD.Set();
-         ErrorMessage::Post(ERR_GATEDRIVEFAULT);
-      }
+  //  if (TeslaM3GateDriver::IsFaulty())
+  //    {
+  //       DigIo::Gate_SD.Set();
+   //      ErrorMessage::Post(ERR_GATEDRIVEFAULT);
+   //   }
 }
 
 static void RunCharger(float udc)
@@ -152,7 +152,7 @@ static void Ms10Task(void)
    }
 
 //   stt |= DigIo::emcystop_in.Get() ? STAT_NONE : STAT_EMCYSTOP;
-   stt |= DigIo::mprot_in.Get() ? STAT_NONE : STAT_MPROT;
+//   stt |= DigIo::mprot_in.Get() ? STAT_NONE : STAT_MPROT;
    stt |= Param::GetInt(Param::potnom) <= 0 ? STAT_NONE : STAT_POTPRESSED;
    stt |= udc >= Param::GetFloat(Param::udcsw) ? STAT_NONE : STAT_UDCBELOWUDCSW;
    stt |= udc < Param::GetFloat(Param::udclim) ? STAT_NONE : STAT_UDCLIM;
@@ -164,7 +164,7 @@ static void Ms10Task(void)
     * - udc >= udcsw
     * - udc < udclim
     */
-   if ((stt & (STAT_EMCYSTOP | STAT_MPROT | STAT_POTPRESSED | STAT_UDCBELOWUDCSW | STAT_UDCLIM)) == STAT_NONE)
+   if ((stt & (STAT_EMCYSTOP | STAT_POTPRESSED | STAT_UDCBELOWUDCSW | STAT_UDCLIM)) == STAT_NONE)
    {
       /* Switch to charge mode if
        * - Charge mode is enabled
@@ -407,10 +407,10 @@ extern "C" int main(void)
          break;
       }
 
-      if (!TeslaM3GateDriver::Init())
-      {
-         ErrorMessage::Post(ERR_GATEDRIVEINITFAIL);
-      }
+      //if (!TeslaM3GateDriver::Init())
+     // {
+     //    ErrorMessage::Post(ERR_GATEDRIVEINITFAIL);
+     // }
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;
@@ -435,6 +435,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
+   DigIo::Gate_PWR.Clear();
    //TeslaSpi::InitPmic();
 
    while(1)
