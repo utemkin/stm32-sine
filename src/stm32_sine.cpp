@@ -100,8 +100,14 @@ static void Ms100Task(void)
       can->SendAll();
 
    //TeslaSpi::TlfErrChk();
-
-
+  if(GateDriver::IsFaulty())
+  {
+    Param::SetInt(Param::GTStat,0);
+  }
+  else
+  {
+    Param::SetInt(Param::GTStat,1);
+  }
 }
 
 static void RunCharger(float udc)

@@ -403,7 +403,7 @@ uint16_t PwmGeneration::TimerSetup(uint16_t deadtime, bool activeLow)
    if (hwRev == HW_BLUEPILL || hwRev == HW_PRIUS)
       timer_set_break_polarity_low(PWM_TIMER);
    else
-      timer_set_break_polarity_low(PWM_TIMER);
+      timer_set_break_polarity_high(PWM_TIMER);// shutdown polarity
 
    timer_enable_break(PWM_TIMER);
    timer_set_enabled_off_state_in_run_mode(PWM_TIMER);
