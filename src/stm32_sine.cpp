@@ -43,6 +43,8 @@
 #include "temp_meas.h"
 #include "vehiclecontrol.h"
 #include "teslaspi.h"
+#include "teslam3pmic.h"
+#include "teslam3gatedriver.h"
 
 HWREV hwRev; //Hardware variant of board we are running on
 
@@ -89,7 +91,18 @@ static void Ms100Task(void)
    if (Param::GetInt(Param::canperiod) == CAN_PERIOD_100MS)
       can->SendAll();
 
-   TeslaSpi::TlfErrChk();
+   //TeslaSpi::TlfErrChk();
+
+    if (TeslaM3PowerWatchdog::Strobe() != TeslaM3PowerWatchdog::Error::OK)
+      {
+         ErrorMessage::Post(ERR_PMICSTROBEFAULT);
+      }
+
+    if (TeslaM3GateDriver::IsFaulty())
+      {
+         DigIo::Gate_SD.Set();
+         ErrorMessage::Post(ERR_GATEDRIVEFAULT);
+      }
 }
 
 static void RunCharger(float udc)
@@ -217,12 +230,14 @@ static void Ms10Task(void)
       //this applies new deadtime and pwmfrq and enables the outputs for the given mode
       PwmGeneration::SetOpmode(opmode);
       DigIo::err_out.Clear();
+      DigIo::Gate_SD.Clear();//enable gate drivers
       DigIo::prec_out.Clear();
       initWait = -1;
    }
    else if (initWait == 10)
    {
       PwmGeneration::SetCurrentOffset(AnaIn::il1.Get(), AnaIn::il2.Get());
+      DigIo::Gate_SD.Set();//disable gate drivers
       initWait--;
    }
    else if (initWait > 0)
@@ -377,6 +392,26 @@ extern "C" int main(void)
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
 
+         auto pmic_init = TeslaM3PowerWatchdog::Init();
+      switch (pmic_init)
+      {
+         case TeslaM3PowerWatchdog::Error::ReadParityFail:
+         case TeslaM3PowerWatchdog::Error::WriteFail:
+                  ErrorMessage::Post(ERR_PMICINITFAIL);
+         break;
+         case TeslaM3PowerWatchdog::Error::StateTransitionFail:
+                  ErrorMessage::Post(ERR_PMICRUNSTATEFAIL);
+         break;
+         case TeslaM3PowerWatchdog::Error::OK:
+            // Do nothing //
+         break;
+      }
+
+      if (!TeslaM3GateDriver::Init())
+      {
+         ErrorMessage::Post(ERR_GATEDRIVEINITFAIL);
+      }
+
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;
    Can c(CAN1, (Can::baudrates)Param::GetInt(Param::canspeed));
@@ -400,7 +435,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
-   TeslaSpi::InitPmic();
+   //TeslaSpi::InitPmic();
 
    while(1)
       t.Run();

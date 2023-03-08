@@ -68,6 +68,7 @@ void clock_setup(void)
    rcc_periph_clock_enable(RCC_AFIO); //CAN
    rcc_periph_clock_enable(RCC_CAN1); //CAN
    rcc_periph_clock_enable(RCC_SPI1); //Only needed for i3 inverter but we always enable it
+   rcc_periph_clock_enable(RCC_SPI3); //gate drivers
 }
 
 void spi_setup()
@@ -82,6 +83,17 @@ void spi_setup()
    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO5 | GPIO3);
    gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO4);
    spi_enable(SPI1);
+
+   spi_init_master(SPI3, SPI_CR1_BAUDRATE_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
+                  SPI_CR1_CPHA_CLK_TRANSITION_2, SPI_CR1_DFF_16BIT, SPI_CR1_MSBFIRST);
+   spi_set_full_duplex_mode(SPI3);
+   spi_enable_software_slave_management(SPI3);
+   spi_set_nss_high(SPI3);
+   gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO10 | GPIO12);
+   gpio_set_mode(GPIOC, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO11);
+   spi_set_unidirectional_mode(SPI3);
+   spi_enable(SPI3);
+
 }
 
 static bool is_floating(uint32_t port, uint16_t pin)
