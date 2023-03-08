@@ -45,5 +45,7 @@ bool PmicSpiDriver::ReadDataAfterWrite()
 uint16_t PmicSpiDriver::TransferData(uint16_t data)
 {
     //return SPI_pollingNonFIFOTransaction(m_base, 16U, data);
+    DigIo::PSU_CS.Clear();
     return spi_xfer(SPI1,data);
+    DigIo::PSU_CS.Set();
 }

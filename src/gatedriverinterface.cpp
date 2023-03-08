@@ -53,7 +53,10 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     // Run the SPI transaction with a 2 cycle delay between 16-bit words
    // SPI_pollingFIFOTransaction(
    //     m_gateSpiBase, 16U, writeData, readData, NumDriverChips, 2U);
-
+    for (int i = 0; i < NumDriverChips; i++)
+    {
+        readData[i] = spi_xfer(SPI3, writeData[i]);
+    }
 
 
     // Manually de-assert the ~CS pin and ensure that we have waited sufficient

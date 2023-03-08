@@ -21,6 +21,7 @@
 #ifndef C2000SPIDRIVER_H
 #define C2000SPIDRIVER_H
 
+#include "digio.h"
 #include "stdint.h"
 #include <libopencm3/stm32/spi.h>
 
