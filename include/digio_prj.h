@@ -27,7 +27,7 @@
     DIG_IO_ENTRY(Gate_CS,     GPIOA, GPIO4,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(OE_245,      GPIOB, GPIO14,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Gate_SD,     GPIOC, GPIO5,  PinMode::OUTPUT)      \
-    DIG_IO_ENTRY(Gate_PWR,    GPIOB, GPIO5,  PinMode::OUTPUT)      \
+    DIG_IO_ENTRY(Gate_PWR,    GPIOB, GPIO15,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S2,      GPIOC, GPIO7,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S1,      GPIOC, GPIO8,  PinMode::OUTPUT)      \
     DIG_IO_ENTRY(Mux_S0,      GPIOC, GPIO9,  PinMode::OUTPUT)      \
