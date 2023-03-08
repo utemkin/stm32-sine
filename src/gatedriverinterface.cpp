@@ -28,7 +28,7 @@ namespace c2000 {
  */
 void GateDriverInterface::Init()
 {
-
+//not needed as done in hwinit.cpp
 }
 
 /**
@@ -56,7 +56,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     for (int i = 0; i < NumDriverChips; i++)
     {
         readData[i] = spi_xfer(SPI3, writeData[i]);
-        DEVICE_DELAY_US(1);
+        DEVICE_DELAY_US(2);
     }
 
 

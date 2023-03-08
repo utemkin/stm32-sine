@@ -226,11 +226,11 @@ void write_bootloader_pininit(bool bootprec, bool pwmActiveLow)
    if (!pwmActiveLow)
    {
       commands.pindef[2].port = GPIOA;
-      commands.pindef[2].pin = GPIO8 | GPIO9 | GPIO10;
+      commands.pindef[2].pin = GPIO8 | GPIO9 | GPIO10 | GPIO7;
       commands.pindef[2].inout = PIN_OUT;
       commands.pindef[2].level = 0;
       commands.pindef[3].port = GPIOB;
-      commands.pindef[3].pin = GPIO13 | GPIO14 | GPIO15;
+      commands.pindef[3].pin = GPIO0 | GPIO1;
       commands.pindef[3].inout = PIN_OUT;
       commands.pindef[3].level = 0;
    }
