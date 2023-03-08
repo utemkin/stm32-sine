@@ -1,3 +1,4 @@
+
 /*
  * This file is part of the stm32-sine project.
  *
@@ -16,16 +17,24 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-#ifndef TESLAM3GATEDRIVER_H
-#define TESLAM3GATEDRIVER_H
+#ifndef GATEDRIVER_H
+#define GATEDRIVER_H
 
+#include "gatedriverinterface.h"
 #include <stdint.h>
 
-class TeslaM3GateDriver
+namespace c2000 {
+
+/**
+ * \brief Control the STGAP1AS gate driver chain on the Tesla M3 inverter
+ */
+class GateDriver
 {
 public:
     static bool Init();
     static bool IsFaulty();
+    static void Enable();
+    static void Disable();
 
 private:
     enum ChipMask
@@ -36,27 +45,37 @@ private:
     };
     struct Register
     {
-        uint8_t  reg;
-        uint8_t  value;
+        uint16_t reg;
+        uint16_t value;
         ChipMask mask;
+        uint16_t validBitMask;
     };
 
 private:
-    static const uint8_t  NumDriverChips = 6;
+    static const uint16_t NumDriverChips = 6;
     static const Register GateDriverRegisterSetup[];
-    static const uint8_t  RegisterSetupSize;
+    static const uint16_t RegisterSetupSize;
     static const Register NullGateDriverRegister;
 
 private:
-    static void InitSPIPort();
+    typedef uint16_t DataBuffer[NumDriverChips];
+
+private:
     static void SetupGateDrivers();
     static bool VerifyGateDriverConfig();
 
-    static void SendCommand(uint8_t cmd);
+    static void SendCommand(uint16_t cmd);
     static void WriteRegister(const Register& reg);
+    static void ReadRegister(uint16_t regNum, uint16_t* values);
     static bool VerifyRegister(
-        const Register& readReg,
-        const Register& verifyValue);
+        uint16_t regNum,
+        uint16_t validBits,
+        uint16_t value);
+
+private:
+    static GateDriverInterface sm_interface;
 };
 
-#endif // TESLAM3GATEDRIVER_H
+} // namespace c2000
+
+#endif // GATEDRIVER_H

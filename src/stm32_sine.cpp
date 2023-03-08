@@ -43,8 +43,11 @@
 #include "temp_meas.h"
 #include "vehiclecontrol.h"
 #include "teslaspi.h"
-#include "teslam3pmic.h"
-#include "teslam3gatedriver.h"
+#include "pmicdriver.h"
+#include "pmicspidriver.h"
+#include "gatedriver.h"
+#include "gatedriverinterface.h"
+
 
 HWREV hwRev; //Hardware variant of board we are running on
 
@@ -52,11 +55,16 @@ static Stm32Scheduler* scheduler;
 static Can* can;
 static Terminal* terminal;
 
+using namespace c2000;
+
+typedef TeslaM3PowerWatchdog<PmicSpiDriver> PowerWatchdog;
+
 static void Ms100Task(void)
 {
    DigIo::led_out.Toggle();
    DigIo::led2_out.Toggle();
    iwdg_reset();
+   PowerWatchdog::Strobe();//TLF35584 strobe
    float cpuLoad = PwmGeneration::GetCpuLoad() + scheduler->GetCpuLoad();
    Param::SetFloat(Param::cpuload, cpuLoad / 10);
    Param::SetInt(Param::turns, Encoder::GetFullTurns());
@@ -93,16 +101,7 @@ static void Ms100Task(void)
 
    //TeslaSpi::TlfErrChk();
 
-    if (TeslaM3PowerWatchdog::Strobe() != TeslaM3PowerWatchdog::Error::OK)
-      {
-         ErrorMessage::Post(ERR_PMICSTROBEFAULT);
-      }
 
-  //  if (TeslaM3GateDriver::IsFaulty())
-  //    {
-  //       DigIo::Gate_SD.Set();
-   //      ErrorMessage::Post(ERR_GATEDRIVEFAULT);
-   //   }
 }
 
 static void RunCharger(float udc)
@@ -392,25 +391,20 @@ extern "C" int main(void)
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
 
-         auto pmic_init = TeslaM3PowerWatchdog::Init();
-      switch (pmic_init)
-      {
-         case TeslaM3PowerWatchdog::Error::ReadParityFail:
-         case TeslaM3PowerWatchdog::Error::WriteFail:
-                  ErrorMessage::Post(ERR_PMICINITFAIL);
-         break;
-         case TeslaM3PowerWatchdog::Error::StateTransitionFail:
-                  ErrorMessage::Post(ERR_PMICRUNSTATEFAIL);
-         break;
-         case TeslaM3PowerWatchdog::Error::OK:
-            // Do nothing //
-         break;
-      }
+   PowerWatchdog::Error status = PowerWatchdog::Init();
 
-      //if (!TeslaM3GateDriver::Init())
-     // {
-     //    ErrorMessage::Post(ERR_GATEDRIVEINITFAIL);
-     // }
+    if (status == PowerWatchdog::OK)
+    {
+        //printf("Success\n");
+        Param::SetInt(Param::TLFStat,1);
+    }
+    else
+    {
+        //printf("Failed with %d\n", status);
+        Param::SetInt(Param::TLFStat,0);
+    }
+
+
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;

@@ -155,7 +155,7 @@
     VALUE_ENTRY(hwver,       HWREVS,  2036 ) \
     VALUE_ENTRY(opmode,      OPMODES, 2000 ) \
     VALUE_ENTRY(lasterr,     errorListString,  2038 ) \
-    VALUE_ENTRY(TLFStat,     "dig",  2040 ) \
+    VALUE_ENTRY(TLFStat,     TLFRep,  2040 ) \
     VALUE_ENTRY(status,      STATUS,  2044 ) \
     VALUE_ENTRY(udc,         "V",     2001 ) \
     VALUE_ENTRY(idc,         "A",     2002 ) \
@@ -258,6 +258,7 @@
 #define DIRMODES     "0=Button, 1=Switch, 2=ButtonReversed, 3=SwitchReversed, 4=DefaultForward"
 #define IDLEMODS     "0=Always, 1=NoBrake, 2=Cruise, 3=Off, 4=HillHold"
 #define ONOFF        "0=Off, 1=On, 2=na"
+#define TLFRep       "0=Fault, 1=Ok"
 #define OKERR        "0=Error, 1=Ok, 2=na"
 #define CHARGEMODS   "0=Off, 3=Boost, 4=Buck"
 #define ENCMODES     "0=Single, 1=AB, 2=ABZ, 3=SPI, 4=Resolver, 5=SinCos"
