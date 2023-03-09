@@ -384,7 +384,7 @@ extern "C" void __cxa_pure_virtual() { while (1); }
 extern "C" int main(void)
 {
    extern const TERM_CMD TermCmds[];
-
+   GateDriver::Disable();//bring gate /sd line low
    clock_setup();
    rtc_setup();
    hwRev = io_setup();
@@ -449,6 +449,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
+   GateDriver::Enable();//bring /sd high
    //TeslaSpi::InitPmic();
    GateDriver::Enable();
 
