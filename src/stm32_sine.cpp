@@ -100,7 +100,7 @@ static void Ms100Task(void)
       can->SendAll();
 
    //TeslaSpi::TlfErrChk();
-   /*
+
   if(GateDriver::IsFaulty())
   {
     Param::SetInt(Param::GTStat,0);
@@ -109,7 +109,7 @@ static void Ms100Task(void)
   {
     Param::SetInt(Param::GTStat,1);
   }
-  */
+
 }
 
 static void RunCharger(float udc)
@@ -384,7 +384,6 @@ extern "C" void __cxa_pure_virtual() { while (1); }
 extern "C" int main(void)
 {
    extern const TERM_CMD TermCmds[];
-   GateDriver::Disable();//bring gate /sd line low
    clock_setup();
    rtc_setup();
    hwRev = io_setup();
@@ -412,19 +411,19 @@ extern "C" int main(void)
         //printf("Failed with %d\n", status);
         Param::SetInt(Param::TLFStat,0);
     }
-/*
+
     if (GateDriver::Init())
     {
         //printf("Successful\n");
         Param::SetInt(Param::GTStat,1);
-        GateDriver::Enable();
+       // GateDriver::Enable();
     }
     else
     {
         //printf("Failed\n");
         Param::SetInt(Param::GTStat,0);
     }
-*/
+
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;
