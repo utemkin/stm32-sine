@@ -210,7 +210,6 @@ bool GateDriver::VerifyGateDriverConfig()
                 uint16_t crc = regValues[chip] & 0xFF;
 
                 uint16_t computedCrc = crc8(value, STGAP1AS_SPI_CRC_INIT_VALUE);
-
                 // Mask off the "don't care" bits from the value before
                 // comparing
                 value = value & reg.validBitMask;

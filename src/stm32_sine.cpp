@@ -100,6 +100,7 @@ static void Ms100Task(void)
       can->SendAll();
 
    //TeslaSpi::TlfErrChk();
+   /*
   if(GateDriver::IsFaulty())
   {
     Param::SetInt(Param::GTStat,0);
@@ -108,6 +109,7 @@ static void Ms100Task(void)
   {
     Param::SetInt(Param::GTStat,1);
   }
+  */
 }
 
 static void RunCharger(float udc)
@@ -235,14 +237,14 @@ static void Ms10Task(void)
       //this applies new deadtime and pwmfrq and enables the outputs for the given mode
       PwmGeneration::SetOpmode(opmode);
       DigIo::err_out.Clear();
-      DigIo::Gate_SD.Clear();//enable gate drivers
+      DigIo::Gate_SD.Set();//enable gate drivers
       DigIo::prec_out.Clear();
       initWait = -1;
    }
    else if (initWait == 10)
    {
       PwmGeneration::SetCurrentOffset(AnaIn::il1.Get(), AnaIn::il2.Get());
-      DigIo::Gate_SD.Set();//disable gate drivers
+     // DigIo::Gate_SD.Clear();//disable gate drivers
       initWait--;
    }
    else if (initWait > 0)
@@ -382,7 +384,7 @@ extern "C" void __cxa_pure_virtual() { while (1); }
 extern "C" int main(void)
 {
    extern const TERM_CMD TermCmds[];
-
+   GateDriver::Disable();//bring gate /sd line low
    clock_setup();
    rtc_setup();
    hwRev = io_setup();
@@ -410,7 +412,7 @@ extern "C" int main(void)
         //printf("Failed with %d\n", status);
         Param::SetInt(Param::TLFStat,0);
     }
-
+/*
     if (GateDriver::Init())
     {
         //printf("Successful\n");
@@ -422,7 +424,7 @@ extern "C" int main(void)
         //printf("Failed\n");
         Param::SetInt(Param::GTStat,0);
     }
-
+*/
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;
@@ -447,6 +449,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
+   GateDriver::Enable();//bring /sd high
    //TeslaSpi::InitPmic();
 
    while(1)
