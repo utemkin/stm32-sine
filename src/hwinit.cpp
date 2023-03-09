@@ -92,6 +92,7 @@ void spi_setup()
    spi_set_nss_high(SPI3);
    gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_50_MHZ, GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO10 | GPIO12);
    gpio_set_mode(GPIOC, GPIO_MODE_INPUT, GPIO_CNF_INPUT_FLOAT, GPIO11);
+   spi_set_unidirectional_mode(SPI3);
    spi_enable(SPI3);
 
 }

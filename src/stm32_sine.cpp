@@ -110,6 +110,10 @@ static void Ms100Task(void)
     Param::SetInt(Param::GTStat,1);
   }
 */
+
+   Param::SetInt(Param::il1Raw, AnaIn::il1.Get());
+   Param::SetInt(Param::il2Raw, AnaIn::il2.Get());
+   Param::SetInt(Param::TmpRaw, AnaIn::tmphs.Get());
 }
 
 static void RunCharger(float udc)

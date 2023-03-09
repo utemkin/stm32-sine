@@ -25,7 +25,7 @@
    3. Display values
  */
 //Next param id (increase when adding new parameter!): 148
-//Next value Id: 2051
+//Next value Id: 2054
 /*              category     name         unit       min     max     default id */
 
 #define MOTOR_PARAMETERS_COMMON \
@@ -189,6 +189,9 @@
     VALUE_ENTRY(din_ocur,    OKERR,   2030 ) \
     VALUE_ENTRY(din_desat,   OKERR,   2031 ) \
     VALUE_ENTRY(din_bms,     ONOFF,   2032 ) \
+    VALUE_ENTRY(il1Raw,      "dig",   2051 ) \
+    VALUE_ENTRY(il2Raw,      "dig",   2052 ) \
+    VALUE_ENTRY(TmpRaw,      "dig",   2053 ) \
     VALUE_ENTRY(cpuload,     "%",     2035 ) \
 
 #define VALUES_SINE \
