@@ -100,7 +100,7 @@ static void Ms100Task(void)
       can->SendAll();
 
    //TeslaSpi::TlfErrChk();
-
+/*
   if(GateDriver::IsFaulty())
   {
     Param::SetInt(Param::GTStat,0);
@@ -109,7 +109,7 @@ static void Ms100Task(void)
   {
     Param::SetInt(Param::GTStat,1);
   }
-
+*/
 }
 
 static void RunCharger(float udc)
@@ -398,6 +398,8 @@ extern "C" int main(void)
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
    DigIo::Gate_PWR.Clear();//gate drive psu enable
+   GateDriver::Disable();//disable gate drivers for setup
+   DigIo::Gate_CS.Set();
 
    PowerWatchdog::Error status = PowerWatchdog::Init();
 
@@ -448,7 +450,6 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
-   GateDriver::Enable();//bring /sd high
    //TeslaSpi::InitPmic();
    GateDriver::Enable();
 
