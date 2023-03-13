@@ -35,6 +35,7 @@
 
 
 
+
 #define DIG_IO_BLUEPILL \
     DIG_IO_ENTRY(brake_in,    GPIOB, GPIO9,  PinMode::INPUT_FLT)   \
     DIG_IO_ENTRY(rev_in,      GPIOB, GPIO8,  PinMode::INPUT_FLT)   \

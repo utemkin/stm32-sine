@@ -209,7 +209,7 @@ void write_bootloader_pininit(bool bootprec, bool pwmActiveLow)
    commands.pindef[0].level = 0;
    commands.pindef[1].port = GPIOB;
    commands.pindef[1].inout = PIN_OUT;
-   commands.pindef[1].level = bootprec;
+   commands.pindef[1].level = 0;
 
    if (hwRev == HW_BLUEPILL)
    {

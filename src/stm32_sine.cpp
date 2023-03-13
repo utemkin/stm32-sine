@@ -47,6 +47,7 @@
 #include "pmicspidriver.h"
 #include "gatedriver.h"
 #include "gatedriverinterface.h"
+#include "delay.h"
 
 
 HWREV hwRev; //Hardware variant of board we are running on
@@ -110,6 +111,11 @@ static void Ms100Task(void)
     Param::SetInt(Param::GTStat,1);
   }
 */
+ //  DigIo::Gate_SD.Toggle();
+
+   Param::SetInt(Param::il1Raw, AnaIn::il1.Get());
+   Param::SetInt(Param::il2Raw, AnaIn::il2.Get());
+   Param::SetInt(Param::TmpRaw, AnaIn::tmphs.Get());
 }
 
 static void RunCharger(float udc)
@@ -388,6 +394,7 @@ extern "C" int main(void)
    rtc_setup();
    hwRev = io_setup();
    gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP);
+   gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM3_REMAP_FULL_REMAP);
  //  tim_setup();// remove oc timers
    spi_setup();//spi1 setup
    nvic_setup();
@@ -399,8 +406,6 @@ extern "C" int main(void)
    PwmGeneration::SetCurrentOffset(2048, 2048);
    DigIo::Gate_PWR.Clear();//gate drive psu enable
    GateDriver::Disable();//disable gate drivers for setup
-   DigIo::Gate_CS.Set();
-
    PowerWatchdog::Error status = PowerWatchdog::Init();
 
     if (status == PowerWatchdog::OK)
@@ -413,7 +418,7 @@ extern "C" int main(void)
         //printf("Failed with %d\n", status);
         Param::SetInt(Param::TLFStat,0);
     }
-
+/*
     if (GateDriver::Init())
     {
         //printf("Successful\n");
@@ -425,7 +430,7 @@ extern "C" int main(void)
         //printf("Failed\n");
         Param::SetInt(Param::GTStat,0);
     }
-
+*/
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;
@@ -450,6 +455,7 @@ extern "C" int main(void)
    Param::Change(Param::nodeid);
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
+   gpio_clear(GPIOB,0);
    //TeslaSpi::InitPmic();
    GateDriver::Enable();
 

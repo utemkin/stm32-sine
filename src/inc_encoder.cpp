@@ -158,8 +158,8 @@ void Encoder::SwapSinCos(bool swap)
 {
    if (swap)
    {
-      sinChan = 3;
-      cosChan = 12;
+      sinChan = 2;
+      cosChan = 3;
    }
    else
    {
