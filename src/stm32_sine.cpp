@@ -113,8 +113,6 @@ static void Ms100Task(void)
 */
  //  DigIo::Gate_SD.Toggle();
 
-   Param::SetInt(Param::il1Raw, AnaIn::il1.Get());
-   Param::SetInt(Param::il2Raw, AnaIn::il2.Get());
    Param::SetInt(Param::TmpRaw, AnaIn::tmphs.Get());
 }
 

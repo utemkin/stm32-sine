@@ -189,8 +189,6 @@
     VALUE_ENTRY(din_ocur,    OKERR,   2030 ) \
     VALUE_ENTRY(din_desat,   OKERR,   2031 ) \
     VALUE_ENTRY(din_bms,     ONOFF,   2032 ) \
-    VALUE_ENTRY(il1Raw,      "dig",   2051 ) \
-    VALUE_ENTRY(il2Raw,      "dig",   2052 ) \
     VALUE_ENTRY(TmpRaw,      "dig",   2053 ) \
     VALUE_ENTRY(cpuload,     "%",     2035 ) \
 
