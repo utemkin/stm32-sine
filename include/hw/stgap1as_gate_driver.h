@@ -43,7 +43,7 @@
 /** @defgroup spi_commands SPI Commands
 @{*/
 
-/** Device configuration start */
+/** Device configuration start 0x2A*/
 #define STGAP1AS_CMD_START_CONFIG               (0b00101010)
 
 /** Device configuration/check completed */
@@ -63,7 +63,7 @@
 /** Write register */
 #define STGAP1AS_CMD_READ_REG(x)                (STGAP1AS_CMD_READ_REG_VALUE | (x & STGAP1AS_CMD_READ_REG_MASK))
 
-/** Reset all the status registers */
+/** Reset all the status registers 0xD0*/
 #define STGAP1AS_CMD_RESET_STATUS               (0b11010000)
 
 /** Global reset */

@@ -167,10 +167,10 @@ void GateDriver::Disable()
  */
 void GateDriver::SetupGateDrivers()
 {
-    SendCommand(STGAP1AS_CMD_RESET_STATUS);
+    SendCommand(STGAP1AS_CMD_RESET_STATUS);//0xD0
     DEVICE_DELAY_US(ResetStatusDelay);
 
-    SendCommand(STGAP1AS_CMD_START_CONFIG);
+    SendCommand(STGAP1AS_CMD_START_CONFIG);//0x2A
     DEVICE_DELAY_US(StartConfigDelay);
 
     for (uint8_t i = 0; i < RegisterSetupSize; i++)
@@ -179,7 +179,7 @@ void GateDriver::SetupGateDrivers()
         DEVICE_DELAY_US(OtherCommandDelay);
     }
 
-    SendCommand(STGAP1AS_CMD_STOP_CONFIG);
+    SendCommand(STGAP1AS_CMD_STOP_CONFIG);//0x3A
     DEVICE_DELAY_US(StopConfigDelay);
 }
 
