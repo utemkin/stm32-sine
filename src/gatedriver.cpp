@@ -169,12 +169,20 @@ void GateDriver::SetupGateDrivers()
 {
    // SendCommand(STGAP1AS_CMD_RESET_STATUS);//0xD0
     DataBuffer cmdBuffer;
-    memset(cmdBuffer, 0xD032, NumDriverChips);
+
+    for (int i = 0; i < NumDriverChips; i++)
+    {
+       cmdBuffer[i]=0xD032;
+    }
     sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(ResetStatusDelay);
 
+
   //  SendCommand(STGAP1AS_CMD_START_CONFIG);//0x2A
-    memset(cmdBuffer, 0x2ADA, NumDriverChips);
+    for (int i = 0; i < NumDriverChips; i++)
+    {
+       cmdBuffer[i]=0x2ADA;
+    }
     sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(StartConfigDelay);
 
@@ -185,7 +193,10 @@ void GateDriver::SetupGateDrivers()
     }
 
   //  SendCommand(STGAP1AS_CMD_STOP_CONFIG);//0x3A
-    memset(cmdBuffer, 0x3AAA, NumDriverChips);
+    for (int i = 0; i < NumDriverChips; i++)
+    {
+       cmdBuffer[i]=0x3AAA;
+    }
     sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(StopConfigDelay);
 }
