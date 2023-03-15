@@ -404,6 +404,7 @@ extern "C" int main(void)
    PwmGeneration::SetCurrentOffset(2048, 2048);
    DigIo::Gate_PWR.Clear();//gate drive psu enable
    GateDriver::Disable();//disable gate drivers for setup
+   DigIo::Gate_CS.Set();
    PowerWatchdog::Error status = PowerWatchdog::Init();
 
     if (status == PowerWatchdog::OK)
@@ -416,7 +417,7 @@ extern "C" int main(void)
         //printf("Failed with %d\n", status);
         Param::SetInt(Param::TLFStat,0);
     }
-/*
+
     if (GateDriver::Init())
     {
         //printf("Successful\n");
@@ -428,7 +429,7 @@ extern "C" int main(void)
         //printf("Failed\n");
         Param::SetInt(Param::GTStat,0);
     }
-*/
+
 
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack
    scheduler = &s;

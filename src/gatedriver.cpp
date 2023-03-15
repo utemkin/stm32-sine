@@ -167,10 +167,15 @@ void GateDriver::Disable()
  */
 void GateDriver::SetupGateDrivers()
 {
-    SendCommand(STGAP1AS_CMD_RESET_STATUS);//0xD0
+   // SendCommand(STGAP1AS_CMD_RESET_STATUS);//0xD0
+    DataBuffer cmdBuffer;
+    memset(cmdBuffer, 0xD032, NumDriverChips);
+    sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(ResetStatusDelay);
 
-    SendCommand(STGAP1AS_CMD_START_CONFIG);//0x2A
+  //  SendCommand(STGAP1AS_CMD_START_CONFIG);//0x2A
+    memset(cmdBuffer, 0x2ADA, NumDriverChips);
+    sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(StartConfigDelay);
 
     for (uint8_t i = 0; i < RegisterSetupSize; i++)
@@ -179,7 +184,9 @@ void GateDriver::SetupGateDrivers()
         DEVICE_DELAY_US(OtherCommandDelay);
     }
 
-    SendCommand(STGAP1AS_CMD_STOP_CONFIG);//0x3A
+  //  SendCommand(STGAP1AS_CMD_STOP_CONFIG);//0x3A
+    memset(cmdBuffer, 0x3AAA, NumDriverChips);
+    sm_interface.SendData(cmdBuffer, NULL);
     DEVICE_DELAY_US(StopConfigDelay);
 }
 
@@ -298,8 +305,7 @@ void GateDriver::ReadRegister(uint16_t regNum, uint16_t* values)
     // Send the register read command ignoring any response (which is
     // undefined)
     DataBuffer cmdBuffer;
-    memset(
-        cmdBuffer, BuildCommand(STGAP1AS_CMD_READ_REG(regNum)), NumDriverChips);
+    memset(cmdBuffer, BuildCommand(STGAP1AS_CMD_READ_REG(regNum)), NumDriverChips);
     sm_interface.SendData(cmdBuffer, NULL);
 
     // Pessimistic for local reg reads but we'll assume that's not performance
