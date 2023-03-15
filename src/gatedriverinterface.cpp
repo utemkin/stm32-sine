@@ -48,7 +48,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     // match the required set-up time for the STGAP1AS
    // GPIO_writePin(m_gateCsPin, 0);
     DigIo::Gate_CS.Clear();
-    DEVICE_DELAY_US(100);
+    DEVICE_DELAY_US(2);
 
     // Run the SPI transaction with a 2 cycle delay between 16-bit words
    // SPI_pollingFIFOTransaction(
@@ -56,13 +56,13 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     for (int i = 0; i < NumDriverChips; i++)
     {
         readData[i] = spi_xfer(SPI3, writeData[i]);
-        DEVICE_DELAY_US(2);
+        DEVICE_DELAY_US(1);
     }
 
 
     // Manually de-assert the ~CS pin and ensure that we have waited sufficient
     // time for the data being sent byt the chips to arrive
-    DEVICE_DELAY_US(1);
+    DEVICE_DELAY_US(20);
     //GPIO_writePin(m_gateCsPin, 1);
     DigIo::Gate_CS.Set();
 }

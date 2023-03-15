@@ -74,12 +74,12 @@ const uint16_t GateDriver::RegisterSetupSize =
 
 // Delays from STGAP1AS datasheet Table 6. DC operation electrical
 // characteristics - SPI Section
-static const __attribute__((__unused__)) int ResetStatusDelay = 50;   // uSec
-static const __attribute__((__unused__)) int LocalRegReadDelay = 1;   // uSec
+static const __attribute__((__unused__)) int ResetStatusDelay = 70;   // uSec
+static const __attribute__((__unused__)) int LocalRegReadDelay = 10;   // uSec
 static const __attribute__((__unused__)) int RemoteRegReadDelay = 30; // uSec
-static const __attribute__((__unused__)) int StartConfigDelay = 22;   // uSec
-static const __attribute__((__unused__)) int StopConfigDelay = 5;     // uSec
-static const __attribute__((__unused__)) int OtherCommandDelay = 1;   // uSec
+static const __attribute__((__unused__)) int StartConfigDelay = 60;   // uSec
+static const __attribute__((__unused__)) int StopConfigDelay = 50;     // uSec
+static const __attribute__((__unused__)) int OtherCommandDelay = 10;   // uSec
 
 /**
  * \brief Invert and mask off the lower 8 bits only
