@@ -42,6 +42,7 @@ void GateDriverInterface::Init()
  * \param readData Data buffer for data read from the chips. May be NULL if the
  * received data is not required
  */
+ /*
  void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
 {
     // Manually assert the ~CS pin and add a delay to allow it to settle and
@@ -76,7 +77,8 @@ void GateDriverInterface::Init()
     //GPIO_writePin(m_gateCsPin, 1);
     DigIo::Gate_CS.Set();
 }
- /*
+*/
+
 void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
 {
     // Manually assert the ~CS pin and add a delay to allow it to settle and
@@ -102,7 +104,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     //GPIO_writePin(m_gateCsPin, 1);
     DigIo::Gate_CS.Set();
 }
-*/
+
 /**
  * \brief Assert the ~SD line on the STGAP1AS gate drivers allowing them to be
  * configured
