@@ -32,7 +32,7 @@ class GateDriver
 {
 public:
     static bool Init();
-    static bool IsFaulty();
+    static uint8_t IsFaulty();
     static void Enable();
     static void Disable();
 

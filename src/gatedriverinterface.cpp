@@ -42,6 +42,41 @@ void GateDriverInterface::Init()
  * \param readData Data buffer for data read from the chips. May be NULL if the
  * received data is not required
  */
+ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
+{
+    // Manually assert the ~CS pin and add a delay to allow it to settle and
+    // match the required set-up time for the STGAP1AS
+   // GPIO_writePin(m_gateCsPin, 0);
+    DigIo::Gate_CS.Clear();
+    DEVICE_DELAY_US(2);
+
+    // Run the SPI transaction with a 2 cycle delay between 16-bit words
+   // SPI_pollingFIFOTransaction(
+   //     m_gateSpiBase, 16U, writeData, readData, NumDriverChips, 2U);
+    if (readData)
+    {
+        for (int i = 0; i < NumDriverChips; i++)
+        {
+            readData[i] = spi_xfer(SPI3, writeData[i]);
+            DEVICE_DELAY_US(1);
+        }
+    }
+    else
+    {
+        for (int i = 0; i < NumDriverChips; i++)
+        {
+            spi_xfer(SPI3, writeData[i]);
+            DEVICE_DELAY_US(1);
+        }
+    }
+
+    // Manually de-assert the ~CS pin and ensure that we have waited sufficient
+    // time for the data being sent byt the chips to arrive
+    DEVICE_DELAY_US(20);
+    //GPIO_writePin(m_gateCsPin, 1);
+    DigIo::Gate_CS.Set();
+}
+ /*
 void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
 {
     // Manually assert the ~CS pin and add a delay to allow it to settle and
@@ -57,6 +92,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     {
         readData[i] = spi_xfer(SPI3, writeData[i]);
         DEVICE_DELAY_US(1);
+        Param::SetInt(Param::SPI3Rx,readData[i]);
     }
 
 
@@ -66,7 +102,7 @@ void GateDriverInterface::SendData(DataBuffer writeData, DataBuffer readData)
     //GPIO_writePin(m_gateCsPin, 1);
     DigIo::Gate_CS.Set();
 }
-
+*/
 /**
  * \brief Assert the ~SD line on the STGAP1AS gate drivers allowing them to be
  * configured

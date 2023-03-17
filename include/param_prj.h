@@ -190,6 +190,8 @@
     VALUE_ENTRY(din_desat,   OKERR,   2031 ) \
     VALUE_ENTRY(din_bms,     ONOFF,   2032 ) \
     VALUE_ENTRY(TmpRaw,      "dig",   2053 ) \
+    VALUE_ENTRY(SPI3Rx,      "dig",   2054 ) \
+    VALUE_ENTRY(GFltRaw,     "dig",   2058 ) \
     VALUE_ENTRY(cpuload,     "%",     2035 ) \
 
 #define VALUES_SINE \

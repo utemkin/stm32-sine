@@ -101,16 +101,9 @@ static void Ms100Task(void)
       can->SendAll();
 
    //TeslaSpi::TlfErrChk();
-/*
-  if(GateDriver::IsFaulty())
-  {
-    Param::SetInt(Param::GTStat,0);
-  }
-  else
-  {
-    Param::SetInt(Param::GTStat,1);
-  }
-*/
+   Param::SetInt(Param::GFltRaw, GateDriver::IsFaulty());
+
+
  //  DigIo::Gate_SD.Toggle();
 
    Param::SetInt(Param::TmpRaw, AnaIn::tmphs.Get());
@@ -403,6 +396,7 @@ extern "C" int main(void)
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
    DigIo::Gate_PWR.Clear();//gate drive psu enable
+   uDelay(100000);
    GateDriver::Disable();//disable gate drivers for setup
    DigIo::Gate_CS.Set();
    PowerWatchdog::Error status = PowerWatchdog::Init();
@@ -422,12 +416,13 @@ extern "C" int main(void)
     {
         //printf("Successful\n");
         Param::SetInt(Param::GTStat,1);
-       // GateDriver::Enable();
+
     }
     else
     {
         //printf("Failed\n");
         Param::SetInt(Param::GTStat,0);
+
     }
 
 

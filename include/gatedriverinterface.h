@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include "digio.h"
 #include "delay.h"
+#include "params.h"
 #define DEVICE_DELAY_US(x) uDelay(x)
 
 namespace c2000 {

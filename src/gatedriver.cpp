@@ -1,4 +1,3 @@
-
 /*
  * This file is part of the stm32-sine project.
  *
@@ -21,6 +20,8 @@
 #include "crc8.h"
 #include "hw/stgap1as_gate_driver.h"
 #include <string.h>
+
+static uint16_t ctrValue=0;
 
 namespace c2000 {
 
@@ -130,18 +131,19 @@ bool GateDriver::Init()
  *
  * \return bool - There is a fault on one or more gate drivers
  */
-bool GateDriver::IsFaulty()
+uint8_t GateDriver::IsFaulty()
 {
     bool status1 =
-        VerifyRegister(STGAP1AS_REG_STATUS1, STGAP1AS_REG_STATUS1_MASK, 0);
+        VerifyRegister(STGAP1AS_REG_STATUS1, STGAP1AS_REG_STATUS1_MASK, 0);//low = fault
     DEVICE_DELAY_US(LocalRegReadDelay);
     bool status2 =
-        VerifyRegister(STGAP1AS_REG_STATUS2, STGAP1AS_REG_STATUS2_MASK, 0);
+        VerifyRegister(STGAP1AS_REG_STATUS2, STGAP1AS_REG_STATUS2_MASK, 0);//low = fault
     DEVICE_DELAY_US(LocalRegReadDelay);
     bool status3 =
-        VerifyRegister(STGAP1AS_REG_STATUS3, STGAP1AS_REG_STATUS3_MASK, 0);
+        VerifyRegister(STGAP1AS_REG_STATUS3, STGAP1AS_REG_STATUS3_MASK, 0);//low = fault
 
-    return !(status1 && status2 && status3);
+    return ((!status1)|(!status2<1)|(!status3<<2));//now a high is a fault
+     //  return !(status3);
 }
 
 /**
@@ -167,23 +169,10 @@ void GateDriver::Disable()
  */
 void GateDriver::SetupGateDrivers()
 {
-   // SendCommand(STGAP1AS_CMD_RESET_STATUS);//0xD0
-    DataBuffer cmdBuffer;
-
-    for (int i = 0; i < NumDriverChips; i++)
-    {
-       cmdBuffer[i]=0xD032;
-    }
-    sm_interface.SendData(cmdBuffer, NULL);
+    SendCommand(STGAP1AS_CMD_RESET_STATUS);
     DEVICE_DELAY_US(ResetStatusDelay);
 
-
-  //  SendCommand(STGAP1AS_CMD_START_CONFIG);//0x2A
-    for (int i = 0; i < NumDriverChips; i++)
-    {
-       cmdBuffer[i]=0x2ADA;
-    }
-    sm_interface.SendData(cmdBuffer, NULL);
+    SendCommand(STGAP1AS_CMD_START_CONFIG);
     DEVICE_DELAY_US(StartConfigDelay);
 
     for (uint8_t i = 0; i < RegisterSetupSize; i++)
@@ -192,12 +181,7 @@ void GateDriver::SetupGateDrivers()
         DEVICE_DELAY_US(OtherCommandDelay);
     }
 
-  //  SendCommand(STGAP1AS_CMD_STOP_CONFIG);//0x3A
-    for (int i = 0; i < NumDriverChips; i++)
-    {
-       cmdBuffer[i]=0x3AAA;
-    }
-    sm_interface.SendData(cmdBuffer, NULL);
+    SendCommand(STGAP1AS_CMD_STOP_CONFIG);
     DEVICE_DELAY_US(StopConfigDelay);
 }
 
@@ -249,7 +233,11 @@ bool GateDriver::VerifyGateDriverConfig()
 void GateDriver::SendCommand(uint16_t cmd)
 {
     DataBuffer cmdBuffer;
-    memset(cmdBuffer, BuildCommand(cmd), NumDriverChips);
+
+    for (uint16_t i = 0; i < NumDriverChips; i++)
+    {
+        cmdBuffer[i] = BuildCommand(cmd);
+    }
 
     sm_interface.SendData(cmdBuffer, NULL);
 }
@@ -316,7 +304,12 @@ void GateDriver::ReadRegister(uint16_t regNum, uint16_t* values)
     // Send the register read command ignoring any response (which is
     // undefined)
     DataBuffer cmdBuffer;
-    memset(cmdBuffer, BuildCommand(STGAP1AS_CMD_READ_REG(regNum)), NumDriverChips);
+
+    for (uint16_t i = 0; i < NumDriverChips; i++)
+    {
+        cmdBuffer[i] = BuildCommand(STGAP1AS_CMD_READ_REG(regNum));
+    }
+
     sm_interface.SendData(cmdBuffer, NULL);
 
     // Pessimistic for local reg reads but we'll assume that's not performance
@@ -325,7 +318,12 @@ void GateDriver::ReadRegister(uint16_t regNum, uint16_t* values)
 
     // Send a NOP while reading the data back from the register
     DataBuffer nopBuffer;
-    memset(nopBuffer, BuildCommand(STGAP1AS_CMD_NOP), NumDriverChips);
+
+    for (uint16_t i = 0; i < NumDriverChips; i++)
+    {
+        nopBuffer[i] = BuildCommand(STGAP1AS_CMD_NOP);
+    }
+
     sm_interface.SendData(nopBuffer, values);
 }
 
@@ -354,7 +352,6 @@ bool GateDriver::VerifyRegister(
         uint16_t computedCrc = crc8(actualValue, STGAP1AS_SPI_CRC_INIT_VALUE);
 
         // Mask off the "don't care" bits from the value before comparing
-        actualValue = actualValue & validBits;
 
         result = result && (computedCrc == actualCrc) && (actualValue == value);
     }
