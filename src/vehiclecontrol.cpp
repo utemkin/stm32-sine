@@ -47,6 +47,7 @@ int VehicleControl::tempmFiltered = 0;
 int VehicleControl::udcFiltered = 0;
 uint16_t VehicleControl::bmwAdcNextChan = 0;
 uint16_t VehicleControl::bmwAdcValues[4];
+static uint8_t tmpCounter=0;
 
 void VehicleControl::PostErrorIfRunning(ERROR_MESSAGE_NUM err)
 {
@@ -422,6 +423,74 @@ float VehicleControl::ProcessUdc()
 
 void VehicleControl::GetTemps(float& tmphs, float &tmpm)
 {
+//Inverter temps : f(x) = − 0.0233761121162231 x + 80.4236162487562
+//Motor temps : f(x) = − 4.52235735650968E-05 x² + 0.275971323064707 x − 379.356856791421
+
+      static uint16_t tmpsRaw;
+      static float hsTemps[3];
+      static float mTemp;
+
+switch(tmpCounter)
+      {
+      case 0:
+      DigIo::Mux_S0.Clear();
+      DigIo::Mux_S1.Clear();
+      DigIo::Mux_S2.Clear();
+      tmpsRaw=AnaIn::tmphs.Get();
+      hsTemps[0]= -0.0233761121162231*(tmpsRaw) + 80.4236162487562;//Read coolant inlet temp sensor in inverter
+      break;
+
+      case 1:
+      DigIo::Mux_S0.Set();
+      DigIo::Mux_S1.Clear();
+      DigIo::Mux_S2.Clear();
+      tmpsRaw=AnaIn::tmphs.Get();
+      hsTemps[1]= -0.0233761121162231*(tmpsRaw) + 80.4236162487562;//Read Heatsink BC  temp sensor in inverter
+      break;
+
+      case 2:
+      DigIo::Mux_S0.Clear();
+      DigIo::Mux_S1.Set();
+      DigIo::Mux_S2.Clear();
+      tmpsRaw=AnaIn::tmphs.Get();
+      hsTemps[2]= -0.0233761121162231*(tmpsRaw) + 80.4236162487562;//Read Heatsink AC  temp sensor in inverter
+      break;
+
+      case 3:
+      DigIo::Mux_S0.Set();
+      DigIo::Mux_S1.Set();
+      DigIo::Mux_S2.Clear();//unknown position
+      break;
+
+      case 4:
+      DigIo::Mux_S0.Clear();
+      DigIo::Mux_S1.Clear();
+      DigIo::Mux_S2.Set();
+      tmpsRaw=AnaIn::tmpm.Get();
+      mTemp= -4.52235735650968E-05*(tmpsRaw*tmpsRaw) + 0.275971323064707*(tmpsRaw) -379.356856791421;//Read Motor temp sensor
+      break;
+
+      case 5:
+      DigIo::Mux_S0.Set();
+      DigIo::Mux_S1.Clear();
+      DigIo::Mux_S2.Set();//unknown position
+      break;
+
+      default:
+      break;
+      }
+
+      tmpCounter++;
+      if(tmpCounter>6) tmpCounter=0;
+
+      tmphs = MAX(hsTemps[0], MAX(hsTemps[1], hsTemps[2]));
+      tmpm = mTemp;
+/*
+
+
+
+      }
+/*
    if (hwRev == HW_TESLA)
    {
       static float hsTemps[3];
@@ -517,6 +586,7 @@ void VehicleControl::GetTemps(float& tmphs, float &tmpm)
          tmphs = TempMeas::Lookup(tmphsi, snshs);
       }
    }
+   */
 }
 
 float VehicleControl::GetUserThrottleCommand()

@@ -58,6 +58,7 @@ void clock_setup(void)
    rcc_periph_clock_enable(RCC_GPIOC);
    rcc_periph_clock_enable(RCC_GPIOD);
    rcc_periph_clock_enable(RCC_USART3);
+   rcc_periph_clock_enable(RCC_USART1);//oil pump lin
    rcc_periph_clock_enable(RCC_TIM1); //Main PWM
    rcc_periph_clock_enable(RCC_TIM2); //Scheduler, over current on blue pill
    rcc_periph_clock_enable(RCC_TIM3); //Rotor Encoder
@@ -67,7 +68,8 @@ void clock_setup(void)
    rcc_periph_clock_enable(RCC_CRC);
    rcc_periph_clock_enable(RCC_AFIO); //CAN
    rcc_periph_clock_enable(RCC_CAN1); //CAN
-   rcc_periph_clock_enable(RCC_SPI1); //Only needed for i3 inverter but we always enable it
+   rcc_periph_clock_enable(RCC_CAN2); //CAN2
+   rcc_periph_clock_enable(RCC_SPI1); //pmic
    rcc_periph_clock_enable(RCC_SPI3); //gate drivers
 }
 

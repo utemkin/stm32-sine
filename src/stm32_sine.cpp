@@ -48,6 +48,7 @@
 #include "gatedriver.h"
 #include "gatedriverinterface.h"
 #include "delay.h"
+#include "linbus.h"
 
 
 HWREV hwRev; //Hardware variant of board we are running on
@@ -55,6 +56,7 @@ HWREV hwRev; //Hardware variant of board we are running on
 static Stm32Scheduler* scheduler;
 static Can* can;
 static Terminal* terminal;
+static LinBus* linbus;
 
 using namespace c2000;
 
@@ -386,6 +388,7 @@ extern "C" int main(void)
    hwRev = io_setup();
    gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM1_REMAP_PARTIAL_REMAP);
    gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_TIM3_REMAP_FULL_REMAP);
+   gpio_primary_remap(AFIO_MAPR_SWJ_CFG_JTAG_OFF_SW_ON, AFIO_MAPR_USART1_REMAP);//lin oil pump on pb6,7
  //  tim_setup();// remove oc timers
    spi_setup();//spi1 setup
    nvic_setup();
@@ -450,8 +453,10 @@ extern "C" int main(void)
    write_bootloader_pininit(Param::GetBool(Param::bootprec), Param::GetBool(Param::pwmpol));
    DigIo::OE_245.Set();
    gpio_clear(GPIOB,0);
-   //TeslaSpi::InitPmic();
+
    GateDriver::Enable();
+   LinBus l(USART1,19200);//init oil pump lin comms at 19200 baud on usart1
+   linbus = &l;
 
    while(1)
       t.Run();
