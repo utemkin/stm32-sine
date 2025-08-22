@@ -17,15 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define VERSION 5.36
+#define VERSION 5.37ME
 
 /* Entries should be ordered as follows:
    1. Saveable parameters
    2. Temporary parameters
    3. Display values
  */
-//Next param id (increase when adding new parameter!): 159
-//Next value Id: 2061
+//Next param id (increase when adding new parameter!): 160
+//Next value Id: 2065
 /*              category     name         unit       min     max     default id */
 
 #define MOTOR_PARAMETERS_COMMON \
@@ -73,6 +73,7 @@
     PARAM_ENTRY(CAT_INVERTER,udclim,      "V",       0,      1000,   540,    48  ) \
     PARAM_ENTRY(CAT_INVERTER,snshs,       SNS_HS,    0,      7,      0,      45  ) \
     PARAM_ENTRY(CAT_INVERTER,pinswap,     SWAPS,     0,      15,     0,      109 ) \
+    PARAM_ENTRY(CAT_INVERTER,pumpspeed,   "dig",     0,      255,    255,    159  ) \
 
 #define INVERTER_PARAMETERS_FOC \
     PARAM_ENTRY(CAT_INVERTER,modmax,      "dig",     37000,  45000,  37836,  148 )
@@ -186,7 +187,11 @@
     VALUE_ENTRY(rotordir,    DIRS,    2053 ) \
     VALUE_ENTRY(tmphs,       "°C",    2019 ) \
     VALUE_ENTRY(tmpm,        "°C",    2020 ) \
+    VALUE_ENTRY(tmpoil,      "°C",    2061 ) \
     VALUE_ENTRY(uaux,        "V",     2021 ) \
+    VALUE_ENTRY(upmp,        "V",     2062 ) \
+    VALUE_ENTRY(pmprev,      "RPM",   2063 ) \
+    VALUE_ENTRY(oilpres,     "PSI",   2064 ) \
     VALUE_ENTRY(pwmio,       "",      2045 ) \
     VALUE_ENTRY(canio,       CANIOS,  2022 ) \
     VALUE_ENTRY(din_cruise,  ONOFF,   2023 ) \
