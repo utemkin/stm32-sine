@@ -455,13 +455,13 @@ extern "C" int main(void)
 
    MotorVoltage::SetMaxAmp(SineCore::MAXAMP);
    PwmGeneration::SetCurrentOffset(2048, 2048);
+   LinBus l(UART4, 19200);
+   lin=&l;
    if (hwRev == HW_TESLAM3)
    {
    DigIo::gate_ps_en.Set();
    uDelay(200000);
    TeslaModel3::Initialize();
-   LinBus l(UART4, 19200);
-   lin=&l;
    linM3.SetLinInterface(lin);
    }
    Stm32Scheduler s(hwRev == HW_BLUEPILL ? TIM4 : TIM2); //We never exit main so it's ok to put it on stack

@@ -17,7 +17,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define VERSION 5.37ME
+#define VERSION 5.38ME
 
 /* Entries should be ordered as follows:
    1. Saveable parameters
