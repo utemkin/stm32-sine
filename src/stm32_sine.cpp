@@ -68,6 +68,26 @@ static LinBus* lin;
 static Model3Lin linM3;
 static uint8_t m3PumpSpd=0;
 
+static void sendasimplefuckingcanmsg()
+{
+    uint8_t bytes[8];
+    uint16_t sendVolts=Param::GetInt(Param::udc)*10;
+    uint16_t sendSpeed=Param::GetInt(Param::speed);
+
+
+    bytes[0]=(Param::GetInt(Param::opmode));
+    bytes[1]=sendVolts && 0xFF;
+    bytes[2]=sendVolts>>8;
+    bytes[3]=sendSpeed && 0xFF;
+    bytes[4]=sendSpeed>>8;
+    bytes[5]=(Param::GetInt(Param::tmphs))+30;
+    bytes[6]=(Param::GetInt(Param::tmpm))+30;
+    bytes[7]=0x00;
+
+
+    can->Send(0x190, (uint32_t*)bytes,8);
+}
+
 
 static void Ms100Task(void)
 {
@@ -116,6 +136,8 @@ static void Ms100Task(void)
    {
       TeslaModel3::CyclicFunction();
    }
+
+   sendasimplefuckingcanmsg();
 }
 
 static void RunCharger(float udc)
@@ -400,6 +422,8 @@ static void ProcessCustomSdoCommands(CanSdo::SdoFrame* sdoFrame)
       }
    }
 }
+
+
 
 static void UpgradeParameters()
 {
