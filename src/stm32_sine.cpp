@@ -76,9 +76,9 @@ static void sendasimplefuckingcanmsg()
 
 
     bytes[0]=(Param::GetInt(Param::opmode));
-    bytes[1]=sendVolts && 0xFF;
+    bytes[1]=sendVolts & 0xFF;
     bytes[2]=sendVolts>>8;
-    bytes[3]=sendSpeed && 0xFF;
+    bytes[3]=sendSpeed & 0xFF;
     bytes[4]=sendSpeed>>8;
     bytes[5]=(Param::GetInt(Param::tmphs))+30;
     bytes[6]=(Param::GetInt(Param::tmpm))+30;
